@@ -20,7 +20,7 @@ if ! "$engine" inspect moodle-soca-demo-db > /dev/null 2>&1; then
   "$engine" run -d --name moodle-soca-demo-db -p 127.0.0.1:13407:3306 -e MARIADB_ROOT_PASSWORD=soca-disposable-local-test -e MARIADB_DATABASE=soca_moodle "$database" > /dev/null
 else "$engine" start moodle-soca-demo-db > /dev/null; fi
 for attempt in $(seq 1 60); do
-  if "$engine" exec moodle-soca-demo-db mariadb-admin -uroot -psoca-disposable-local-test ping --silent > /dev/null 2>&1; then break; fi
+  if "$engine" exec moodle-soca-demo-db mariadb --protocol=tcp -h127.0.0.1 -uroot -psoca-disposable-local-test -e "SELECT 1" > /dev/null 2>&1; then break; fi
   sleep 1
 done
 "$engine" exec moodle-soca-demo-db mariadb -uroot -psoca-disposable-local-test -e 'ALTER DATABASE soca_moodle CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
