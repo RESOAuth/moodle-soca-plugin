@@ -3,9 +3,10 @@
 declare(strict_types=1);
 define('CLI_SCRIPT', true);
 require (getenv('MOODLE_ROOT') ?: '/var/www/html') . '/config.php';
-require __DIR__ . '/../bootstrap.php';
+require $CFG->dirroot . '/auth/soca/bootstrap.php';
 set_config('profile', json_encode(['origin' => 'https://app.example.com', 'issuer' => 'https://issuer.example.com',
     'allowed_domains' => ['example.com'], 'provisioning' => true]), 'auth_soca');
+set_config('auth', 'manual,soca');
 $flow = new \auth_soca\local\flow();
 $count = 0;
 function verify(bool $value, string $label): void { global $count; $count++; if (!$value) { throw new RuntimeException($label); } }
